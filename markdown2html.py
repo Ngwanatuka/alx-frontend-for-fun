@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-markadown2html to HTML Converter
+Markdown to HTML Converter
 
 Usage: ./markdown2html.py <input_file> <output_file>
 """
@@ -14,8 +14,8 @@ def convert_markdown_to_html(input_file, output_file):
     Convert Markdown to HTML and save it to the output file
 
     Args:
-        input_file (str): Markdown file
-        output_file (str): HTML file
+        input_file (str): Path to the input Markdown file.
+        output_file (str): Path to the output HTML file.
     """
     try:
         with open(input_file, 'r') as md_file:
@@ -32,7 +32,7 @@ def convert_markdown_to_html(input_file, output_file):
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         print(
-            "Usage: ./markdown2html.py <README.me> <README.html>",
+            "Usage: ./markdown2html.py README.md README.html",
             file=sys.stderr)
         sys.exit(1)
 
