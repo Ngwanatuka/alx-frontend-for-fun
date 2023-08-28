@@ -7,7 +7,7 @@ Usage: ./markdown2html.py <input_file> <output_file>
 import sys
 import os
 import markdown
-
+import re
 
 def convert_markdown_to_html(input_file, output_file):
     """
@@ -22,12 +22,14 @@ def convert_markdown_to_html(input_file, output_file):
             markdown_text = md_file.read()
             html = markdown.markdown(markdown_text)
 
+        heading_pattern = re.compile(r'^(#+) (.+)$', re.MULTILINE)
+        markdown_text = heading_pattern.sub(r'<h\1>\2</h\1>', markdown_text)
+
         with open(output_file, 'w') as html_file:
             html_file.write(html)
     except FileNotFoundError:
         print(f"Missing {input_file}", file=sys.stderr)
         sys.exit(1)
-
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
