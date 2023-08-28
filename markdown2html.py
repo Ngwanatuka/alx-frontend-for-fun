@@ -27,6 +27,8 @@ def convert_markdown_to_html(md, html):
         html_lines = []
         inside_list = False  # Flag to track if we are inside a list
         inside_ordered_list = False
+        inside_paragraph = False
+        paragraph_lines = []  # Store lines within a paragraph
 
         for line in f:
             # Check for Markdown headings
@@ -39,7 +41,7 @@ def convert_markdown_to_html(md, html):
             else:
                 # Check for ordered lists
                 if re.match(r"^\* ", line):
-                    # If not insted ordered list, start a new list
+                    # If not inside an ordered list, start a new list
                     if not inside_ordered_list:
                         html_lines.append("<ol>")
                         inside_ordered_list = True
@@ -56,21 +58,48 @@ def convert_markdown_to_html(md, html):
                     list_item = line[2:].strip()
                     html_lines.append(f"<li>{list_item}</li>")
                 else:
-                    # If we were inside an ordered list, close it
-                    if inside_ordered_list:
-                        html_lines.append("</ol>")
-                        inside_ordered_list = False
-                    # If we were inside a list, close it
-                    if inside_list:
-                        html_lines.append("</ul>")
-                        inside_list = False
-                    html_lines.append(line.rstrip())
+                    # If it's a blank line, close the paragraph
+                    if line.strip() == "":
+                        # If we were inside an ordered list, close it
+                        if inside_ordered_list:
+                            html_lines.append("</ol>")
+                            inside_ordered_list = False
+                        # If we were inside a list, close it
+                        if inside_list:
+                            html_lines.append("</ul>")
+                            inside_list = False
+                        if inside_paragraph:
+                            # Add lines within the paragraph with <br /> tags
+                            for para_line in paragraph_lines:
+                                html_lines.append(para_line)
+                            # Reset paragraph lines
+                            paragraph_lines = []
+                            html_lines.append("</p>")
+                            inside_paragraph = False
+
+                    else:
+                        # If we are not inside a paragraph, start one
+                        if not inside_paragraph:
+                            html_lines.append("<p>")
+                            inside_paragraph = True
+                        # Remove leading spaces
+                        line = line.strip()
+                        if line:
+                            # Add line to the paragraph lines with <br /> if it's not the first line
+                            if paragraph_lines:
+                                paragraph_lines.append("<br />")
+                            paragraph_lines.append(line)
 
         # Close any open ordered list at the end of the document
         if inside_ordered_list:
             html_lines.append("</ol>")
         if inside_list:
             html_lines.append("</ul>")
+        if inside_paragraph:
+            # Add lines within the paragraph with <br /> tags
+            for para_line in paragraph_lines:
+                html_lines.append(para_line)
+            html_lines.append("</p>")
 
     # Write the HTML output to a file
     with open(html, "w", encoding="utf-8") as f:
