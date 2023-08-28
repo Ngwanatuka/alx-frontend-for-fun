@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 """
-Import necessary modules
+Markdown to HTML Converter
+
+Usage: ./markdown2html.py <input_file> <output_file>
 """
 import re
 import os
