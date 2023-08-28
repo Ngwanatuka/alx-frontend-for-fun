@@ -26,6 +26,7 @@ def convert_markdown_to_html(md, html):
     with open(md, encoding="utf-8") as f:
         html_lines = []
         inside_list = False  # Flag to track if we are inside a list
+        inside_ordered_list = False
 
         for line in f:
             # Check for Markdown headings
@@ -36,8 +37,17 @@ def convert_markdown_to_html(md, html):
                 html_lines.append(
                     f"<h{heading_level}>{heading_text}</h{heading_level}>")
             else:
+                # Check for ordered lists
+                if re.match(r"^\* ", line):
+                    # If not insted ordered list, start a new list
+                    if not inside_ordered_list:
+                        html_lines.append("<ol>")
+                        inside_ordered_list = True
+                    # Extract the list item and add it to the HTML
+                    list_item = line[2:].strip()
+                    html_lines.append(f"<li>{list_item}</li>")
                 # Check for unordered lists
-                if re.match(r"^- ", line):
+                elif re.match(r"^- ", line):
                     # If not inside a list, start a new list
                     if not inside_list:
                         html_lines.append("<ul>")
@@ -46,13 +56,19 @@ def convert_markdown_to_html(md, html):
                     list_item = line[2:].strip()
                     html_lines.append(f"<li>{list_item}</li>")
                 else:
+                    # If we were inside an ordered list, close it
+                    if inside_ordered_list:
+                        html_lines.append("</ol>")
+                        inside_ordered_list = False
                     # If we were inside a list, close it
                     if inside_list:
                         html_lines.append("</ul>")
                         inside_list = False
                     html_lines.append(line.rstrip())
 
-        # Close any open list at the end of the document
+        # Close any open ordered list at the end of the document
+        if inside_ordered_list:
+            html_lines.append("</ol>")
         if inside_list:
             html_lines.append("</ul>")
 
