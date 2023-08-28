@@ -44,7 +44,7 @@ if __name__ == "__main__":
     # Check if the correct number of command-line arguments is provided
     if len(sys.argv) != 3:
         print(
-            "Usage: ./markdown2html.py <input_file> <output_file>",
+            "Usage: ./markdown2html.py <README.md> <README.html>",
             file=sys.stderr)
         sys.exit(1)
 
