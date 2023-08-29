@@ -4,6 +4,7 @@ Markdown to HTML Converter
 
 Usage: ./markdown2html.py <input_file> <output_file>
 """
+import hashlib
 import re
 import os
 import sys
@@ -105,6 +106,18 @@ def convert_markdown_to_html(md, html):
                         line = re.sub(r"\*\*(.*?)\*\*", r"<b>\1</b>", line)
                         # Handle italic syntax
                         line = re.sub(r"__(.*?)__", r"<em>\1</em>", line)
+
+                        # Check for [[...]] syntax
+                        match_md5 = re.search(r"\[\[(.*?)\]\]", line)
+                        if match_md5:
+                            md5_hash = hashlib.md5(match_md5.group(1).encode()).hexdigest()
+                            line = line.replace(match_md5.group(0), md5_hash)
+
+                        # Check for ((...)) syntax
+                        match_remove_c = re.search(r"\(\((.*?)\)\)", line, flags=re.IGNORECASE)
+                        if match_remove_c:
+                            content_without_c = re.sub(r"c", "", match_remove_c.group(1), flags=re.IGNORECASE)
+                            line = line.replace(match_remove_c.group(0), content_without_c)
 
                         if line:
                             """Add line to the paragraph lines with <br />
