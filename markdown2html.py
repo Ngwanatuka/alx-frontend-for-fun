@@ -45,6 +45,13 @@ def convert_markdown_to_html(md, html):
                     if not inside_ordered_list:
                         html_lines.append("<ol>")
                         inside_ordered_list = True
+                        # If we were inside a paragraph, close it
+                        if inside_paragraph:
+                            formatted_paragraph = format_paragraph(paragraph_lines)
+                            html_lines.append(formatted_paragraph)
+                            paragraph_lines = []
+                            html_lines.append("</p>")
+                            inside_paragraph = False
                     # Extract the list item and add it to the HTML
                     list_item = line[2:].strip()
                     html_lines.append(f"<li>{list_item}</li>")
@@ -84,6 +91,11 @@ def convert_markdown_to_html(md, html):
                             inside_paragraph = True
                         # Remove leading spaces
                         line = line.strip()
+
+                        # Handle bold syntax
+                        line = re.sub(r"\*\*(.*?)\*\*", r"<b>\1</b>", line)
+                        # Handle italic syntax
+                        line = re.sub(r"__(.*?)__", r"<em>\1</em>", line)
                         if line:
                             # Add line to the paragraph lines with <br /> if it's not the first line
                             if paragraph_lines:
@@ -104,6 +116,25 @@ def convert_markdown_to_html(md, html):
     # Write the HTML output to a file
     with open(html, "w", encoding="utf-8") as f:
         f.write("\n".join(html_lines))
+
+def format_paragraph(lines):
+    """
+    Format lines within a paragraph with bold and italic tags.
+
+    Args:
+        lines (list): List of lines within a paragraph.
+
+    Returns:
+        str: Formatted HTML paragraph.
+    """
+    formatted_lines = []
+    for line in lines:
+        # Handle bold syntax
+        line = re.sub(r"\*\*(.*?)\*\*", r"<b>\1</b>", line)
+        # Handle italic syntax
+        line = re.sub(r"__(.*?)__", r"<em>\1</em>", line)
+        formatted_lines.append(line)
+    return "<br />".join(formatted_lines)
 
 
 if __name__ == "__main__":
