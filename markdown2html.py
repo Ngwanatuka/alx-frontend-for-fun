@@ -47,13 +47,18 @@ def convert_markdown_to_html(md, html):
                         inside_ordered_list = True
                         # If we were inside a paragraph, close it
                         if inside_paragraph:
-                            formatted_paragraph = format_paragraph(paragraph_lines)
+                            formatted_paragraph = format_paragraph(
+                                paragraph_lines)
                             html_lines.append(formatted_paragraph)
                             paragraph_lines = []
                             html_lines.append("</p>")
                             inside_paragraph = False
                     # Extract the list item and add it to the HTML
                     list_item = line[2:].strip()
+
+                    # Handle bold syntax within list items
+                    list_item = re.sub(
+                        r"\*\*(.*?)\*\*", r"<b>\1</b>", list_item)
                     html_lines.append(f"<li>{list_item}</li>")
                 # Check for unordered lists
                 elif re.match(r"^- ", line):
@@ -63,6 +68,10 @@ def convert_markdown_to_html(md, html):
                         inside_list = True
                     # Extract the list item and add it to the HTML
                     list_item = line[2:].strip()
+
+                    # Handle bold syntax within list items
+                    list_item = re.sub(
+                        r"\*\*(.*?)\*\*", r"<b>\1</b>", list_item)
                     html_lines.append(f"<li>{list_item}</li>")
                 else:
                     # If it's a blank line, close the paragraph
@@ -96,8 +105,11 @@ def convert_markdown_to_html(md, html):
                         line = re.sub(r"\*\*(.*?)\*\*", r"<b>\1</b>", line)
                         # Handle italic syntax
                         line = re.sub(r"__(.*?)__", r"<em>\1</em>", line)
+
                         if line:
-                            # Add line to the paragraph lines with <br /> if it's not the first line
+                            """Add line to the paragraph lines with <br />
+                              if it's not the first line
+                            """
                             if paragraph_lines:
                                 paragraph_lines.append("<br />")
                             paragraph_lines.append(line)
@@ -116,6 +128,7 @@ def convert_markdown_to_html(md, html):
     # Write the HTML output to a file
     with open(html, "w", encoding="utf-8") as f:
         f.write("\n".join(html_lines))
+
 
 def format_paragraph(lines):
     """
