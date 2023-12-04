@@ -379,7 +379,7 @@
   
   /* Section ABOUT US ============================= */
   .section-about-us [class^="col-"] {
-    align-items: center;
+    align-self: center;
   }
 
   /*** 4. CARD ***/
