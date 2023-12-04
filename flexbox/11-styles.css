@@ -684,7 +684,7 @@ ul.row {
   position: relative;
 }
 
-.hero-article:before {
+.hero-article::before {
   content: "";
   background: rgba(0, 0, 0, 0.8);
   position: absolute;
