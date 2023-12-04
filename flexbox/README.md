@@ -7,8 +7,8 @@ Weight: 1
 Project over - took place from Oct 16, 2023 6:00 AM to Oct 23, 2023 6:00 AM
 Manual QA review was done by on Nov 6, 2023 10:15 AM
 
-### Resources
-## Read or watch:
+## Resources
+### Read or watch:
 * [A Complete Guide to Flexbox | CSS-Tricks](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)
 * [Flexbox Froggy - A game for learning CSS flexbox](https://flexboxfroggy.com/)
 * [Flexbox Defense](http://www.flexboxdefense.com/)
