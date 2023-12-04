@@ -501,15 +501,14 @@ ul.row {
 
 .section-hero {
   margin-top: -8.5rem;
-  background-position: 75% 0;
+  position: relative;
 }
 
 .hero-homepage {
-  position: relative;
-
   background-repeat: no-repeat;
   background-size: 90rem auto;
   background-color: #010101;
+  background-position: 75% 0;
 }
 
 .section-hero .section-body {
