@@ -753,8 +753,8 @@ html {
   
 
   /* Tag list
-      ============================= */
-  .tag-list {
+    ============================= */
+.tag-list {
     padding: 0;
     list-style: none;
   }
@@ -768,6 +768,7 @@ html {
   }
   
   .tag-list li:last-child:after {
-    content: " ";
+    content: "";
   }
+  
   
